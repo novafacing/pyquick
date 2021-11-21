@@ -41,7 +41,7 @@ class Quick:
         """
         dependencies = []
         for dependency_list in args.dependency:
-            dependencies.extend(dependency_list.split(","))
+            dependencies.extend(dependency_list)
         self.dry: bool = args.dry_run
         self.inject: bool = args.inject
         self.path: Path = args.path
