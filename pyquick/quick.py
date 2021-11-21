@@ -48,10 +48,11 @@ class Quick:
             dependencies.extend(dependency_list)
         self.dry: bool = args.dry_run
         self.inject: bool = args.inject
-        self.path: Path = args.path
         self.non_interactive: bool = args.non_interactive
         self.dependencies: List[str] = dependencies
         self.upgrade: bool = args.upgrade
+        if not self.upgrade:
+            self.path: Path = args.path[0]
         self.repo: Optional[Repo] = None
         self.config = Optional[ConfigParser]
 
