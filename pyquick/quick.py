@@ -107,7 +107,7 @@ class Quick:
             shell=True,
             check=True,
             cwd=self.path,
-            capture_output=False if self.verbose else True,
+            capture_output=not self.verbose,
         )
 
     def write_pyproject(self) -> None:
@@ -163,7 +163,7 @@ class Quick:
                 shell=True,
                 check=True,
                 cwd=self.path,
-                capture_output=False if self.verbose else True,
+                capture_output=not self.verbose,
             )
 
     def setup_gitignore(self) -> None:
@@ -258,7 +258,7 @@ class Quick:
                             ),
                             check=True,
                             shell=True,
-                            capture_output=False if self.verbose else True,
+                            capture_output=not self.verbose,
                         )
                         break
             else:
