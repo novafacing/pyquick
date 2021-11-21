@@ -42,8 +42,8 @@ class Parser:
         self.parser.add_argument(
             "--non-interactive",
             "-n",
-            action="store_false",
-            default=True,
+            action="store_true",
+            default=False,
             required=False,
             help="Whether to run pyquick in interactive mode.",
         )
