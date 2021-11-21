@@ -17,13 +17,6 @@ from subprocess import run
 from git import Repo
 from git.exc import InvalidGitRepositoryError
 from git.objects.util import Actor
-from clikit.io.console_io import ConsoleIO
-from poetry.poetry import Poetry
-from poetry.factory import Factory
-from poetry.installation.installer import Installer
-from poetry.utils.env import EnvManager
-from poetry.console.commands.init import InitCommand
-from poetry.core.packages.project_package import ProjectPackage
 from pre_commit.main import main as pre_commit_main
 from yaml import dump
 
@@ -52,9 +45,6 @@ class Quick:
         self.non_interactive: bool = args.non_interactive
         self.dependencies: List[str] = args.dependency
         self.repo: Optional[Repo] = None
-        self.poetry = Optional[Poetry]
-        self.cio = Optional[ConsoleIO]
-        self.installer = Optional[Installer]
         self.config = Optional[ConfigParser]
 
     def setup_repo(self) -> None:
@@ -156,43 +146,7 @@ class Quick:
 
         self.logger.info("Initializing poetry.")
         if not self.dry:
-            try:
-                self.poetry = Factory().create_poetry(self.path)
-            except RuntimeError as e:
-                self.logger.error(
-                    "Poetry could not be initialized. Probably there is no pyproject.toml. "
-                    "Are you running with --dry-run?"
-                )
-                with (self.path / "pyproject.toml") as pyproject:
-                    self.logger.error(pyproject.read_text())
-                raise e
-
-            cast(ConfigParser, self.config)
-            cast(Poetry, self.poetry)
-
-            def strip_quote(s: str) -> str:
-                """Strip quotes from string."""
-                return s.strip('"').strip("'")
-
-            env_manager = EnvManager(poetry=self.poetry)
-            env = env_manager.create_venv(ConsoleIO())
-            io = ConsoleIO()
-            io.is_decorated = lambda: True
-            io.output.is_decorated = lambda: True
-            installer = Installer(
-                io=io,
-                env=env,
-                package=ProjectPackage(
-                    strip_quote(self.config.get("tool.poetry", "name")),
-                    strip_quote(self.config.get("tool.poetry", "version")),
-                    strip_quote(self.config.get("tool.poetry", "version")),
-                ),
-                locker=self.poetry.locker,
-                pool=self.poetry.pool,
-                config=self.poetry.config,
-            )
-
-            installer.run()
+            run("poetry install", shell=True, check=True)
 
     def setup_gitignore(self) -> None:
         """
