@@ -173,7 +173,7 @@ class Quick:
             env_manager = EnvManager(poetry=self.poetry)
             env = env_manager.create_venv(ConsoleIO())
             io = ConsoleIO()
-            io.output.is_decorated = True
+            io.output.is_decorated = lambda: True
             installer = Installer(
                 io=io,
                 env=env,
