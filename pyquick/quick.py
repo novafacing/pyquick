@@ -100,7 +100,10 @@ class Quick:
                 "--python "
                 f"'{python_version()}'"
             )
-            + (" ".join(f"--dependency={dep}" for dep in self.dependencies))
+            + (
+                (" " if self.dependencies else "")
+                + " ".join(f"--dependency={dep}" for dep in self.dependencies)
+            )
             + (" -n" if self.non_interactive else ""),
             shell=True,
             check=True,
