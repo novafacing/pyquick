@@ -94,7 +94,10 @@ class Quick:
                 f"'{self.path.name}' "
                 "--python "
                 f"'{python_version()}'"
-            ),
+            )
+            + "-n"
+            if self.non_interactive
+            else "",
             shell=True,
             check=True,
             cwd=self.path,
@@ -111,14 +114,13 @@ class Quick:
             self.config = ConfigParser()
             pyproject = self.path / "pyproject.toml"
 
-            if not self.non_interactive:
-                self.init_pyproject()
+            self.init_pyproject()
 
-                self.config.read(pyproject)
+            self.config.read(pyproject)
 
-                assert (
-                    "tool.poetry" in self.config
-                ), "Failed to read newly created pyproject.toml"
+            assert (
+                "tool.poetry" in self.config
+            ), "Failed to read newly created pyproject.toml"
 
             self.config.read_dict(PYPROJECT)
             self.config.write(pyproject.open("w"))
