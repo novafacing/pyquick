@@ -1,5 +1,7 @@
 """Initialize repository and python projects."""
 
+
+from pyquick import __file__ as pyquick_file
 from logging import getLogger
 from argparse import Namespace
 from typing import Optional, cast, List
@@ -9,6 +11,8 @@ from pyquick.defaults import PYPROJECT, GITIGNORE, PRE_COMMIT
 from multiprocessing import Process
 from os import chdir
 from platform import python_version
+from json import load
+from sys import executable
 
 # I've been defeated sadly #TODO: Figure out clikit/cleo
 from subprocess import run
@@ -47,6 +51,7 @@ class Quick:
         self.path: Path = args.path
         self.non_interactive: bool = args.non_interactive
         self.dependencies: List[str] = dependencies
+        self.upgrade: bool = args.upgrade
         self.repo: Optional[Repo] = None
         self.config = Optional[ConfigParser]
 
@@ -217,8 +222,39 @@ class Quick:
             self.repo.git.checkout("-b", "main")
             self.repo.index.commit("Initial commit")
 
+    def check_upgrade(self) -> None:
+        """
+        Perform a self-update.
+        """
+        self.logger.info("Performing self-update.")
+        if not self.dry:
+            for entry in pyquick_file.parents[1].iterdir():
+                if "pyquick" in str(entry) and "dist-info" in str(entry):
+                    with (entry / "direct_url.json").open("r") as info_file:
+                        info = load(info_file)
+                        run(
+                            [
+                                executable,
+                                "-m",
+                                "pip",
+                                "install",
+                                "--upgrade",
+                                "--force-reinstall",
+                                info["url"],
+                            ],
+                            check=True,
+                            shell=True,
+                        )
+                        break
+            else:
+                self.logger.warning("No pyquick package found. Skipping self-update.")
+
     def run(self) -> None:
         """Perform actual setup of the project."""
+
+        if self.upgrade:
+            self.check_upgrade()
+            return
 
         self.setup_repo()
         self.setup_poetry()

@@ -59,6 +59,15 @@ class Parser:
             help="Add a dependency to the project.",
         )
 
+        self.parser.add_argument(
+            "--upgrade",
+            "-u",
+            action="store_true",
+            default=False,
+            required=False,
+            help="Perform a self-update of pyquick.",
+        )
+
     def add_positional(self) -> None:
         """
         Add optional arguments.
