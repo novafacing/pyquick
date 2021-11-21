@@ -55,7 +55,6 @@ class Parser:
         self.parser.add_argument(
             "path",
             type=Path,
-            required=True,
             help="Path to the directory to set up or quicken.",
         )
 
