@@ -52,7 +52,7 @@ class Quick:
         self.dependencies: List[str] = dependencies
         self.upgrade: bool = args.upgrade
         if not self.upgrade:
-            self.path: Path = args.path[0]
+            self.path: Path = args.path
         self.repo: Optional[Repo] = None
         self.config = Optional[ConfigParser]
 
@@ -229,7 +229,7 @@ class Quick:
         """
         self.logger.info("Performing self-update.")
         if not self.dry:
-            for entry in pyquick_file.parents[1].iterdir():
+            for entry in Path(pyquick_file).parents[1].iterdir():
                 if "pyquick" in str(entry) and "dist-info" in str(entry):
                     with (entry / "direct_url.json").open("r") as info_file:
                         info = load(info_file)
