@@ -221,7 +221,7 @@ class Quick:
             assert isinstance(self.repo, Repo)
             self.repo.git.add(all=True)
             self.repo.git.checkout("-b", "main")
-            self.repo.index.commit("Initial commit")
+            self.repo.index.commit("Initial commit", skip_hooks=True)
 
     def check_upgrade(self) -> None:
         """
