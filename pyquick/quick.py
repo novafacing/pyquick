@@ -205,6 +205,11 @@ class Quick:
             pre_commit_yml = self.path / ".pre-commit-config.yaml"
             if not pre_commit_yml.exists():
                 with pre_commit_yml.open("w") as pre_commit:
+                    for i in range(len(PRE_COMMIT["repos"][-1]["hooks"])):
+
+                        PRE_COMMIT["repos"][-1]["hooks"][i]["args"][0] = PRE_COMMIT[
+                            "repos"
+                        ][-1]["hooks"][i]["args"][0].format(self.path.name)
                     dump(PRE_COMMIT, pre_commit, default_flow_style=False)
             else:
                 self.logger.warning(".pre-commit-config.yaml exists. Skipping.")
