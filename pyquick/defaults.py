@@ -181,7 +181,7 @@ PRE_COMMIT = {
         },
         {
             "repo": "https://github.com/psf/black",
-            "rev": "v21.10",
+            "rev": "stable",
             "hooks": [{"id": "black"}],
         },
         {
