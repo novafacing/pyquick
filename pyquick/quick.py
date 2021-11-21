@@ -146,7 +146,7 @@ class Quick:
 
         self.logger.info("Initializing poetry.")
         if not self.dry:
-            run("poetry install", shell=True, check=True)
+            run("poetry install", shell=True, check=True, cwd=self.path)
 
     def setup_gitignore(self) -> None:
         """
