@@ -191,7 +191,7 @@ PRE_COMMIT = {
         },
         {
             "repo": "https://github.com/pycqa/isort",
-            "rev": "v5.10.1",
+            "rev": "5.10.1",
             "hooks": [{"id": "isort", "name": "isort (python)"}],
         },
         {
