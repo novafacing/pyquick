@@ -215,7 +215,7 @@ class Quick:
                 with pre_commit_yml.open("w") as pre_commit:
                     for repo in PRE_COMMIT["repos"]:
                         if repo["repo"] == "local":
-                            for hook in repo["repo"]["hooks"]:
+                            for hook in repo["hooks"]:
                                 hook["args"] = [f"{self.path.name}"]
 
                     dump(PRE_COMMIT, pre_commit, default_flow_style=False)
