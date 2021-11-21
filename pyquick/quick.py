@@ -98,7 +98,7 @@ class Quick:
                 "--python "
                 f"'{python_version()}'"
             )
-            + "-n"
+            + " -n"
             if self.non_interactive
             else "",
             shell=True,
