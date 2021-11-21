@@ -206,6 +206,16 @@ class Quick:
             installer.start()
             installer.join()
 
+    def initial_commit(self) -> None:
+        """
+        Initial commit.
+        """
+        self.logger.info("Initial commit.")
+        if not self.dry:
+            self.repo.git.add(all=True)
+            self.repo.git.checkout("-b", "main")
+            self.repo.index.commit("Initial commit")
+
     def run(self) -> None:
         """Perform actual setup of the project."""
 
@@ -214,3 +224,4 @@ class Quick:
         self.init_poetry()
         self.setup_structure()
         self.setup_precommit()
+        self.initial_commit()
