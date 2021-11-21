@@ -4,7 +4,7 @@ from textwrap import dedent
 
 PYPROJECT = {
     "tool.poetry.dev-dependencies": {
-        "black": '"^21.10"',
+        "black": '"^21.11b"',
         "pylint": '"^2.11.1"',
         "isort": '"^5.10.1"',
         "pytest": '"^6.2.5"',
