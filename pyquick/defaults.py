@@ -204,7 +204,7 @@ PRE_COMMIT = {
                     "entry": "pytest",
                     "language": "system",
                     "types": ["python3"],
-                    "args": [],
+                    "args": ["."],
                 },
                 {
                     "id": "pylint",
@@ -213,7 +213,7 @@ PRE_COMMIT = {
                     "entry": "pylint",
                     "language": "system",
                     "types": ["python3"],
-                    "args": [],
+                    "args": ["."],
                 },
             ],
         },
