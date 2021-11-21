@@ -98,9 +98,7 @@ class Quick:
                 "--python "
                 f"'{python_version()}'"
             )
-            + " -n"
-            if self.non_interactive
-            else "",
+            + (" -n" if self.non_interactive else ""),
             shell=True,
             check=True,
             cwd=self.path,
