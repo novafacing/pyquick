@@ -150,43 +150,45 @@ class Quick:
         Initialize poetry.
         """
 
-        try:
-            self.poetry = Factory().create_poetry(self.path)
-        except RuntimeError as e:
-            self.logger.error(
-                "Poetry could not be initialized. Probably there is no pyproject.toml. "
-                "Are you running with --dry-run?"
+        self.logger.info("Initializing poetry.")
+        if not self.dry:
+            try:
+                self.poetry = Factory().create_poetry(self.path)
+            except RuntimeError as e:
+                self.logger.error(
+                    "Poetry could not be initialized. Probably there is no pyproject.toml. "
+                    "Are you running with --dry-run?"
+                )
+                with (self.path / "pyproject.toml") as pyproject:
+                    self.logger.error(pyproject.read_text())
+                raise e
+
+            cast(ConfigParser, self.config)
+            cast(Poetry, self.poetry)
+
+            def strip_quote(s: str) -> str:
+                """Strip quotes from string."""
+                return s.strip('"').strip("'")
+
+            env_manager = EnvManager(poetry=self.poetry)
+            env = env_manager.create_venv(ConsoleIO())
+            installer = Installer(
+                io=ConsoleIO(),
+                env=env,
+                package=ProjectPackage(
+                    strip_quote(self.config.get("tool.poetry", "name")),
+                    strip_quote(self.config.get("tool.poetry", "version")),
+                    strip_quote(self.config.get("tool.poetry", "version")),
+                ),
+                locker=self.poetry.locker,
+                pool=self.poetry.pool,
+                config=self.poetry.config,
             )
-            with (self.path / "pyproject.toml") as pyproject:
-                self.logger.error(pyproject.read_text())
-            raise e
 
-        cast(ConfigParser, self.config)
-        cast(Poetry, self.poetry)
-
-        def strip_quote(s: str) -> str:
-            """Strip quotes from string."""
-            return s.strip('"').strip("'")
-
-        env_manager = EnvManager(poetry=self.poetry)
-        env = env_manager.create_venv(ConsoleIO())
-        installer = Installer(
-            io=ConsoleIO(),
-            env=env,
-            package=ProjectPackage(
-                strip_quote(self.config.get("tool.poetry", "name")),
-                strip_quote(self.config.get("tool.poetry", "version")),
-                strip_quote(self.config.get("tool.poetry", "version")),
-            ),
-            locker=self.poetry.locker,
-            pool=self.poetry.pool,
-            config=self.poetry.config,
-        )
-
-        if self.dry:
-            installer.dry_run(dry_run=True)
-        else:
-            installer.run()
+            if self.dry:
+                installer.dry_run(dry_run=True)
+            else:
+                installer.run()
 
     def setup_gitignore(self) -> None:
         """
