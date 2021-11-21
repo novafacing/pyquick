@@ -40,7 +40,7 @@ class Quick:
         :param args: Arguments from CLI.
         """
         dependencies = []
-        for dependency_list in args.dependencies:
+        for dependency_list in args.dependency:
             dependencies.extend(dependency_list.split(","))
         self.dry: bool = args.dry_run
         self.inject: bool = args.inject
