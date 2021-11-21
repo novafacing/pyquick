@@ -212,6 +212,7 @@ class Quick:
         """
         self.logger.info("Initial commit.")
         if not self.dry:
+            assert isinstance(self.repo, Repo)
             self.repo.git.add(all=True)
             self.repo.git.checkout("-b", "main")
             self.repo.index.commit("Initial commit")
