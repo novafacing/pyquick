@@ -122,7 +122,9 @@ class Quick:
             ), "Failed to read newly created pyproject.toml"
 
             self.config.read_dict(PYPROJECT)
-            self.config.write(pyproject.open("w"))
+            with pyproject.open("w") as pf:
+                self.config.write(pf)
+                pf.write("\n")
 
     def update_pyproject(self) -> None:
         """
