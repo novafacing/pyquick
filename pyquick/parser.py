@@ -14,6 +14,8 @@ class Parser:
         Initialize the parser.
         """
         self.parser = ArgumentParser(description="pyquick")
+        self.add_optional()
+        self.add_positional()
 
     def add_optional(self) -> None:
         """
