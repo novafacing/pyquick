@@ -39,11 +39,14 @@ class Quick:
 
         :param args: Arguments from CLI.
         """
+        dependencies = []
+        for dependency_list in args.dependencies:
+            dependencies.extend(dependency_list.split(","))
         self.dry: bool = args.dry_run
         self.inject: bool = args.inject
         self.path: Path = args.path
         self.non_interactive: bool = args.non_interactive
-        self.dependencies: List[str] = args.dependency
+        self.dependencies: List[str] = dependencies
         self.repo: Optional[Repo] = None
         self.config = Optional[ConfigParser]
 
