@@ -254,7 +254,7 @@ class Quick:
                                 "install "
                                 "--upgrade "
                                 "--force-reinstall "
-                                f"{info['url']}"
+                                f"git+{info['url']}"
                             ),
                             check=True,
                             shell=True,
