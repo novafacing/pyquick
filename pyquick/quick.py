@@ -73,6 +73,7 @@ class Quick:
                         "Please commit your changes.\n"
                         "Aborting."
                     )
+                self.repo.checkout("-b", "main")
             except InvalidGitRepositoryError:
                 self.logger.info(
                     f"No git repo found at {str(self.path)}. Creating one."
