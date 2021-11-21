@@ -52,6 +52,7 @@ class Parser:
             "--dependency",
             "-D",
             metavar="DEP",
+            action="append",
             nargs="*",
             default=[],
             required=False,
