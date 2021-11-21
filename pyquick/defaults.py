@@ -4,7 +4,7 @@ from textwrap import dedent
 
 PYPROJECT = {
     "tool.poetry.dev-dependencies": {
-        "black": '"^21.11b1"',
+        "black": '"^21.10"',
         "pylint": '"^2.11.1"',
         "isort": '"^5.10.1"',
         "pytest": '"^6.2.5"',
@@ -181,7 +181,7 @@ PRE_COMMIT = {
         },
         {
             "repo": "https://github.com/psf/black",
-            "rev": "v21.11b1",
+            "rev": "v21.10",
             "hooks": [{"id": "black"}],
         },
         {
