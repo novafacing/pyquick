@@ -21,6 +21,7 @@ pytest-cov = "^3.0.0"
 poetry = "^1.1.11"
 pre-commit = "^2.15.0"
 ptpython = "^3.0.20"
+cleo = "^0.8.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

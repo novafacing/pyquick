@@ -8,6 +8,10 @@ from configparser import ConfigParser
 from pyquick.defaults import PYPROJECT, GITIGNORE, PRE_COMMIT
 from multiprocessing import Process
 from os import chdir
+from platform import python_version
+
+# I've been defeated sadly #TODO: Figure out clikit/cleo
+from subprocess import run
 
 
 from git import Repo
@@ -73,6 +77,29 @@ class Quick:
             if not self.dry:
                 self.repo = Repo.init(self.path)
 
+    def init_pyproject(self) -> None:
+        """
+        Initialize pyproject.toml.
+
+        Warning! Only run as mp Process, this does chdir.
+        """
+        self.logger.info("Initializing pyproject.toml on command line.")
+        actor = Actor.author()
+        run(
+            (
+                "poetry init "
+                "--author "
+                f"'{actor.name} <{actor.email}>' "
+                "--name "
+                f"'{self.path.name}' "
+                "--python "
+                f"'{python_version()}'"
+            ),
+            shell=True,
+            check=True,
+            cwd=self.path,
+        )
+
     def write_pyproject(self) -> None:
         """
         Write pyproject.toml to the repo.
@@ -82,64 +109,19 @@ class Quick:
 
         if not self.dry:
             self.config = ConfigParser()
-            self.config.read_dict(PYPROJECT)
-            self.config.add_section("tool.poetry")
-            self.config.set("tool.poetry", "name", self.path.name)
-            self.config.set(
-                "tool.poetry",
-                "description",
-                '"PROJECT DESCRIPTION"'
-                if self.non_interactive
-                else f'''"{input('Project description: ')}"''',
-            )
-            actor = Actor.author()
-
-            self.config.set(
-                "tool.poetry",
-                "authors",
-                f"""["{actor.name} <{actor.email}>"]"""
-                if (actor.name and actor.email) or self.non_interactive
-                else input("Author: "),
-            )
-            self.config.set(
-                "tool.poetry",
-                "license",
-                '"MIT"' if self.non_interactive else f'''"{input('License: ')}"''',
-            )
+            pyproject = self.path / "pyproject.toml"
 
             if not self.non_interactive:
-                ich = InitCommand()
-                ich._io = ConsoleIO()
-                if (
-                    "y"
-                    in input(
-                        "Would you like to define your dependencies interactively [y/n]? "
-                    ).lower()
-                ):
-                    requirements = (
-                        ich._determine_requirements(  # pylint: disable=protected-access
-                            []
-                        )
-                    )
-                    self.config.read_dict({"tool.poetry.dependencies": requirements})
+                self.init_pyproject()
 
-                if (
-                    "y"
-                    in (
-                        "Would you like to define your dev-dependencies interactively [y/n]? ",
-                        True,
-                    ).lower()
-                ):
-                    dev_requirements = (
-                        ich._determine_requirements(  # pylint: disable=protected-access
-                            []
-                        )
-                    )
-                    self.config.read_dict(
-                        {"tool.poetry.dev-dependencies": dev_requirements}
-                    )
+                self.config.read(pyproject)
 
-            self.config.write(self.path / "pyproject.toml")
+                assert (
+                    "tool.poetry" in self.config
+                ), "Failed to read newly created pyproject.toml"
+
+            self.config.read_dict(PYPROJECT)
+            self.config.write(pyproject.open("w"))
 
     def update_pyproject(self) -> None:
         """
@@ -170,18 +152,26 @@ class Quick:
                 "Poetry could not be initialized. Probably there is no pyproject.toml. "
                 "Are you running with --dry-run?"
             )
+            with (self.path / "pyproject.toml") as pyproject:
+                self.logger.error(pyproject.read_text())
             raise e
 
         cast(ConfigParser, self.config)
         cast(Poetry, self.poetry)
 
+        def strip_quote(s: str) -> str:
+            """Strip quotes from string."""
+            return s.strip('"').strip("'")
+
+        env_manager = EnvManager(poetry=self.poetry)
+        env = env_manager.create_venv(ConsoleIO())
         installer = Installer(
             io=ConsoleIO(),
-            env=EnvManager(poetry=self.poetry),
+            env=env,
             package=ProjectPackage(
-                self.config.get("tool.poetry", "name"),
-                self.config.get("tool.poetry", "version"),
-                self.config.get("tool.poetry", "version"),
+                strip_quote(self.config.get("tool.poetry", "name")),
+                strip_quote(self.config.get("tool.poetry", "version")),
+                strip_quote(self.config.get("tool.poetry", "version")),
             ),
             locker=self.poetry.locker,
             pool=self.poetry.pool,
