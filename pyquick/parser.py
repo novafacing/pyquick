@@ -68,6 +68,15 @@ class Parser:
             help="Perform a self-update of pyquick.",
         )
 
+        self.parser.add_argument(
+            "--verbose",
+            "-v",
+            action="store_true",
+            default=False,
+            required=False,
+            help="Print out more information, particularly from subcommands.",
+        )
+
     def add_positional(self) -> None:
         """
         Add optional arguments.
@@ -75,6 +84,7 @@ class Parser:
         self.parser.add_argument(
             "path",
             type=Path,
+            nargs="?",
             help="Path to the directory to set up or quicken.",
         )
 

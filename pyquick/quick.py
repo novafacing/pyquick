@@ -53,6 +53,7 @@ class Quick:
         self.upgrade: bool = args.upgrade
         if not self.upgrade:
             self.path: Path = args.path
+        self.verbose = args.verbose
         self.repo: Optional[Repo] = None
         self.config = Optional[ConfigParser]
 
@@ -106,6 +107,7 @@ class Quick:
             shell=True,
             check=True,
             cwd=self.path,
+            capture_output=False if self.verbose else True,
         )
 
     def write_pyproject(self) -> None:
@@ -156,7 +158,13 @@ class Quick:
 
         self.logger.info("Initializing poetry.")
         if not self.dry:
-            run("poetry install", shell=True, check=True, cwd=self.path)
+            run(
+                "poetry install",
+                shell=True,
+                check=True,
+                cwd=self.path,
+                capture_output=False if self.verbose else True,
+            )
 
     def setup_gitignore(self) -> None:
         """
@@ -250,6 +258,7 @@ class Quick:
                             ],
                             check=True,
                             shell=True,
+                            capture_output=False if self.verbose else True,
                         )
                         break
             else:
