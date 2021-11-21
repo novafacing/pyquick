@@ -247,15 +247,15 @@ class Quick:
                     with (entry / "direct_url.json").open("r") as info_file:
                         info = load(info_file)
                         run(
-                            [
-                                executable,
-                                "-m",
-                                "pip",
-                                "install",
-                                "--upgrade",
-                                "--force-reinstall",
-                                info["url"],
-                            ],
+                            (
+                                f"{executable} "
+                                "-m "
+                                "pip "
+                                "install "
+                                "--upgrade "
+                                "--force-reinstall "
+                                f"{info['url']}"
+                            ),
                             check=True,
                             shell=True,
                             capture_output=False if self.verbose else True,
