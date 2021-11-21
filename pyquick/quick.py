@@ -50,7 +50,7 @@ class Quick:
         self.inject: bool = args.inject
         self.path: Path = args.path
         self.non_interactive: bool = args.non_interactive
-        self.dependencies: List[str] = args.dependecy
+        self.dependencies: List[str] = args.dependency
         self.repo: Optional[Repo] = None
         self.poetry = Optional[Poetry]
         self.cio = Optional[ConsoleIO]
