@@ -48,6 +48,16 @@ class Parser:
             help="Whether to run pyquick in interactive mode.",
         )
 
+        self.parser.add_argument(
+            "--dependency",
+            "-D",
+            metavar="DEP",
+            nargs="*",
+            default=[],
+            required=False,
+            help="Add a dependency to the project.",
+        )
+
     def add_positional(self) -> None:
         """
         Add optional arguments.

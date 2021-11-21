@@ -2,7 +2,7 @@
 
 from logging import getLogger
 from argparse import Namespace
-from typing import Optional, cast
+from typing import Optional, cast, List
 from pathlib import Path
 from configparser import ConfigParser
 from pyquick.defaults import PYPROJECT, GITIGNORE, PRE_COMMIT
@@ -50,6 +50,7 @@ class Quick:
         self.inject: bool = args.inject
         self.path: Path = args.path
         self.non_interactive: bool = args.non_interactive
+        self.dependencies: List[str] = args.dependencies
         self.repo: Optional[Repo] = None
         self.poetry = Optional[Poetry]
         self.cio = Optional[ConsoleIO]
@@ -99,6 +100,7 @@ class Quick:
                 "--python "
                 f"'{python_version()}'"
             )
+            + (" ".join(f"--dependency={dep}" for dep in self.dependencies))
             + (" -n" if self.non_interactive else ""),
             shell=True,
             check=True,
