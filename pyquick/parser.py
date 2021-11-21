@@ -85,6 +85,7 @@ class Parser:
             "path",
             type=Path,
             nargs="?",
+            default=None,
             help="Path to the directory to set up or quicken.",
         )
 
