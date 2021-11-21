@@ -172,8 +172,10 @@ class Quick:
 
             env_manager = EnvManager(poetry=self.poetry)
             env = env_manager.create_venv(ConsoleIO())
+            io = ConsoleIO()
+            io.output.is_decorated = True
             installer = Installer(
-                io=ConsoleIO(),
+                io=io,
                 env=env,
                 package=ProjectPackage(
                     strip_quote(self.config.get("tool.poetry", "name")),
@@ -185,10 +187,7 @@ class Quick:
                 config=self.poetry.config,
             )
 
-            if self.dry:
-                installer.dry_run(dry_run=True)
-            else:
-                installer.run()
+            installer.run()
 
     def setup_gitignore(self) -> None:
         """
