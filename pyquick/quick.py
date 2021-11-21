@@ -64,18 +64,21 @@ class Quick:
             if not self.dry:
                 self.path.mkdir(parents=True, exist_ok=False)
 
-        try:
-            self.repo = Repo(self.path)
-            if self.repo.is_dirty() and self.inject:
-                self.logger.error(
-                    "Repo is dirty and inject is set to True. "
-                    "Please commit your changes.\n"
-                    "Aborting."
+        if not self.dry:
+            try:
+                self.repo = Repo(self.path)
+                if self.repo.is_dirty() and self.inject:
+                    self.logger.error(
+                        "Repo is dirty and inject is set to True. "
+                        "Please commit your changes.\n"
+                        "Aborting."
+                    )
+            except InvalidGitRepositoryError:
+                self.logger.info(
+                    f"No git repo found at {str(self.path)}. Creating one."
                 )
-        except InvalidGitRepositoryError:
-            self.logger.info(f"No git repo found at {str(self.path)}. Creating one.")
-            if not self.dry:
-                self.repo = Repo.init(self.path)
+                if not self.dry:
+                    self.repo = Repo.init(self.path)
 
     def init_pyproject(self) -> None:
         """
