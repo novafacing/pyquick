@@ -13,7 +13,9 @@ class Parser:
         """
         Initialize the parser.
         """
-        self.parser = ArgumentParser(description="pyquick")
+        self.parser = ArgumentParser(
+            prog="pyquick", description="A tool for quickly creating python projects."
+        )
         self.add_optional()
         self.add_positional()
 

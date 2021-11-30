@@ -1,28 +1,28 @@
 """Initialize repository and python projects."""
 
 
-from pyquick import __file__ as pyquick_file
-from logging import getLogger
 from argparse import Namespace
-from typing import Optional, cast, List
-from pathlib import Path
 from configparser import ConfigParser
-from pyquick.defaults import PYPROJECT, GITIGNORE, PRE_COMMIT
+from json import load
+from logging import getLogger
 from multiprocessing import Process
 from os import chdir
+from pathlib import Path
 from platform import python_version
-from json import load
-from sys import executable
 
 # I've been defeated sadly #TODO: Figure out clikit/cleo
 from subprocess import run
-
+from sys import executable
+from typing import List, Optional
 
 from git import Repo
 from git.exc import InvalidGitRepositoryError
 from git.objects.util import Actor
 from pre_commit.main import main as pre_commit_main
 from yaml import dump
+
+from pyquick import __file__ as pyquick_file
+from pyquick.defaults import GITIGNORE, PRE_COMMIT, PYPROJECT
 
 
 class Quick:
@@ -215,6 +215,7 @@ class Quick:
                 with pre_commit_yml.open("w") as pre_commit:
                     for repo in PRE_COMMIT["repos"]:
                         if repo["repo"] == "local":
+                            assert isinstance(repo["hooks"], list)
                             for hook in repo["hooks"]:
                                 hook["args"] = [f"{self.path.name}"]
 

@@ -1,3 +1,5 @@
+"""Entrypoint for pyquick when used from CLI as a module."""
+
 from pyquick.parser import Parser
 from pyquick.quick import Quick
 

@@ -1,8 +1,12 @@
-from tempfile import TemporaryDirectory
-from pyquick.quick import Quick
-from pathlib import Path
+"""Test cases for pyquick."""
+
 from argparse import Namespace
+from pathlib import Path
+from tempfile import TemporaryDirectory
+
 from ptpython import embed
+
+from pyquick.quick import Quick
 
 
 def test_pyquick() -> None:
