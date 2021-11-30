@@ -263,7 +263,10 @@ class Quick:
                         )
                         break
             else:
-                self.logger.warning("No pyquick package found. Skipping self-update.")
+                self.logger.warning(
+                    f"No pyquick package found in {Path(pyquick_file).parents[1]}. "
+                    "Skipping self-update."
+                )
 
     def run(self) -> None:
         """Perform actual setup of the project."""
