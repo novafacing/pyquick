@@ -25,7 +25,7 @@ class Parser:
         """
         self.parser.add_argument(
             "--dry-run",
-            "-d",
+            "-D",
             action="store_true",
             default=False,
             required=False,
@@ -52,7 +52,7 @@ class Parser:
 
         self.parser.add_argument(
             "--dependency",
-            "-D",
+            "-d",
             metavar="DEP",
             action="append",
             nargs="*",
@@ -78,15 +78,11 @@ class Parser:
             required=False,
             help="Print out more information, particularly from subcommands.",
         )
-
-    def add_positional(self) -> None:
-        """
-        Add optional arguments.
-        """
         self.parser.add_argument(
-            "path",
+            "--path",
+            "-p",
             type=Path,
-            nargs="?",
+            required=False,
             default=None,
             help="Path to the directory to set up or quicken.",
         )
