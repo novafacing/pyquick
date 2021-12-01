@@ -43,17 +43,18 @@ class Quick:
 
         :param args: Arguments from CLI.
         """
+        self.args = args
         dependencies = []
-        for dependency_list in args.dependency:
+        for dependency_list in self.args.dependency:
             dependencies.extend(dependency_list)
-        self.dry: bool = args.dry_run
-        self.inject: bool = args.inject
-        self.non_interactive: bool = args.non_interactive
+        self.dry: bool = self.args.dry_run
+        self.inject: bool = self.args.inject
+        self.non_interactive: bool = self.args.non_interactive
         self.dependencies: List[str] = dependencies
-        self.upgrade: bool = args.upgrade
+        self.upgrade: bool = self.args.upgrade
         if not self.upgrade:
-            self.path: Path = args.path
-        self.verbose = args.verbose
+            self.path: Path = self.args.path
+        self.verbose = self.args.verbose
         self.repo: Optional[Repo] = None
         self.config = Optional[ConfigParser]
 
@@ -275,6 +276,7 @@ class Quick:
             self.check_upgrade()
             return
 
+        assert self.path is not None, f"No path specified in {self.args}"
         self.setup_repo()
         self.setup_poetry()
         self.init_poetry()
